@@ -1,0 +1,8 @@
+FROM rust:1.71-bullseye
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libdbus-1-dev libbluetooth-dev pkg-config \
+    && apt-get clean
+
