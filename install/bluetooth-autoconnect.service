@@ -1,0 +1,12 @@
+[Unit]
+Description=AutoConnect Bluetooth trusted devices service 
+Wants=bluetooth.target
+After=bluetooth.target
+
+[Service]
+ExecStart=/usr/local/bin/bluetooth-autoconnect
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
