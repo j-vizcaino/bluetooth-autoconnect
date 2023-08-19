@@ -9,6 +9,8 @@ mod watcher;
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     let retry_interval = Duration::from_secs(10);
+
+    println!("Initializing Bluetooth adapter...");
     let adapter = helpers::bluetooth_adapter().await;
 
     println!(

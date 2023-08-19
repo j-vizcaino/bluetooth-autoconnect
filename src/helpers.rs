@@ -1,10 +1,24 @@
-use bluer::{Adapter, Device};
+use backon::{ConstantBuilder, Retryable};
+use bluer::{Adapter, Device, Result};
+use std::time::Duration;
+
+async fn try_bluetooth_adapter() -> Result<Adapter> {
+    let session = bluer::Session::new().await?;
+
+    let adapter = session.default_adapter().await?;
+    adapter.set_powered(true).await?;
+    Ok(adapter)
+}
 
 pub async fn bluetooth_adapter() -> Adapter {
-    let session = bluer::Session::new().await.unwrap();
-    let adapter = session.default_adapter().await.unwrap();
-    adapter.set_powered(true).await.unwrap();
-    adapter
+    try_bluetooth_adapter
+        .retry(
+            &ConstantBuilder::default()
+                .with_max_times(10)
+                .with_delay(Duration::from_secs(1)),
+        )
+        .await
+        .unwrap()
 }
 
 pub async fn pretty_device_name(dev: &Device) -> String {
